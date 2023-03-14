@@ -6,6 +6,7 @@ Windows上でFeliCaリーダーを用いてFeliCa ID（IDm）を読み取るア�
 ## 動作確認環境
 Windows 11
 リーダー：SONY RC-S380
+
 ※コントロールパネルから「NFCポート/パソリ」で下記を調整（スマホなどマルチNFC対策）
 * PC/SC有効
 * 検出対象ICカードをNFC-Fに限定
