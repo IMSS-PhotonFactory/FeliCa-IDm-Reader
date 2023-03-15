@@ -35,28 +35,41 @@ namespace FeliCa_IDm_Reader
             comboBoxDevice.Items.Clear();
             comboBoxDevice.Text = "";
 
-            using (var context = ContextFactory.Instance.Establish(SCardScope.System))
+            try
             {
-                var devicename = context.GetReaders();
-
-                if (devicename.Length == 0)
+                using (var context = ContextFactory.Instance.Establish(SCardScope.System))
                 {
-                    toolStripStatusLabel1.Text = "No device found.";
-                    System.Media.SystemSounds.Beep.Play();
-                    buttonRead.Enabled = false;
-                    return;
+                    var devicename = context.GetReaders();
+
+                    if (devicename.Length == 0)
+                    {
+                        toolStripStatusLabel1.Text = "No device found.";
+                        System.Media.SystemSounds.Beep.Play();
+                        buttonRead.Enabled = false;
+                        return;
+                    }
+
+                    foreach (var item in devicename)
+                    {
+                        comboBoxDevice.Items.Add(item);
+                    }
+
+                    toolStripStatusLabel1.Text = $"{devicename.Length} device(s) found.";
+                    comboBoxDevice.SelectedIndex = 0;
+                    buttonRead.Enabled = true;
                 }
 
-                foreach (var item in devicename)
-                {
-                    comboBoxDevice.Items.Add(item);
-                }
-
-                toolStripStatusLabel1.Text = $"{devicename.Length} device(s) found.";
-                comboBoxDevice.SelectedIndex = 0;
+            }
+            catch (NoServiceException)
+            {
+                toolStripStatusLabel1.Text = "The Smart Card Resource Manager is not running.";
+                System.Media.SystemSounds.Beep.Play();
+                buttonRead.Enabled = false;
+                return;
             }
 
-            buttonRead.Enabled = true;
+
+            
         }
 
         private void buttonRefresh_Click(object sender, EventArgs e)
